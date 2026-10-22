@@ -1,5 +1,7 @@
 # Helm
 
+[![Tests](https://github.com/menamefilip/helm/actions/workflows/ci.yml/badge.svg)](https://github.com/menamefilip/helm/actions/workflows/ci.yml)
+
 **A local-first workspace for supervised AI-agent work.**
 
 Helm brings projects, goals, files, chats, and agent runs into one workspace. I built it to make an agent's work inspectable: runs move through explicit stages, produce reviewable artifacts, and stop for approval when they would cross an external-action boundary.

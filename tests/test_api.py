@@ -2044,8 +2044,8 @@ def test_team_workflow_rejects_invalid_role_status_and_cross_project_links(tmp_p
 
 
 def test_helm_ui_removes_today_workspace_and_keeps_agent_status_strip():
-    html_path = Path.home() / "ObsidianVault" / "helm" / "ui" / "index.html"
-    text = html_path.read_text(encoding="utf-8")
+    shared_ui = Path(__file__).resolve().parents[1] / "shared-ui"
+    text = (shared_ui / "index.html").read_text(encoding="utf-8")
 
     removed_today_selectors = [
         "data-everyday-workspace",
@@ -2063,11 +2063,11 @@ def test_helm_ui_removes_today_workspace_and_keeps_agent_status_strip():
     assert "data-status-telegram" in text
     assert "data-status-memory" in text
     assert "data-status-team" in text
-    # M26 intentionally removes the standalone TEAM workflow console panel.
+    # The standalone TEAM workflow console panel is intentionally omitted.
     assert "data-team-workflow-panel" not in text
     assert "data-team-workflow-body" not in text
 
-    app_js = (Path.home() / "ObsidianVault" / "helm" / "ui" / "app.js").read_text(encoding="utf-8")
+    app_js = (shared_ui / "app.js").read_text(encoding="utf-8")
     assert "function renderProgressPanel" in app_js
     assert 'data-console-activity-tab="thinking"' in text
 
@@ -2097,50 +2097,6 @@ def test_memory_update_rejects_cross_project_link_after_partial_patch(tmp_path):
 
     cross_patch = client.patch(f"/api/memory/{memory.json()['id']}", json={"project_id": project_a["id"]})
     assert cross_patch.status_code == 400
-
-
-def test_telegram_state_sync_script_allows_only_configured_user_and_dedupes(tmp_path):
-    import os
-    import sqlite3
-    import subprocess
-    import sys
-
-    hermes_db = tmp_path / "hermes_state.db"
-    helm_db = tmp_path / "workspace.db"
-    init_db(helm_db)
-    with sqlite3.connect(hermes_db) as conn:
-        conn.execute("CREATE TABLE sessions(id TEXT PRIMARY KEY, source TEXT, user_id TEXT)")
-        conn.execute(
-            """
-            CREATE TABLE messages(
-                id INTEGER PRIMARY KEY, session_id TEXT, role TEXT, content TEXT,
-                timestamp REAL, platform_message_id TEXT
-            )
-            """
-        )
-        conn.execute("INSERT INTO sessions(id, source, user_id) VALUES ('allowed', 'telegram', '7105254438')")
-        conn.execute("INSERT INTO sessions(id, source, user_id) VALUES ('other', 'telegram', '999')")
-        conn.execute("INSERT INTO messages(id, session_id, role, content, timestamp, platform_message_id) VALUES (1, 'allowed', 'user', 'Allowed message', 1700000000, 'a1')")
-        conn.execute("INSERT INTO messages(id, session_id, role, content, timestamp, platform_message_id) VALUES (2, 'other', 'user', 'Other message', 1700000001, 'o1')")
-
-    env = os.environ.copy()
-    env.update({
-        "HERMES_STATE_DB": str(hermes_db),
-        "BOB_WORKSPACE_DB": str(helm_db),
-        "HELM_TELEGRAM_ALLOWED_USER_ID": "7105254438",
-        "HELM_TELEGRAM_SYNC_BATCH_LIMIT": "bad-int",
-    })
-    script = str(Path.home() / ".hermes" / "scripts" / "helm_telegram_state_sync.py")
-    first = subprocess.run([sys.executable, script], env=env, text=True, capture_output=True, check=True)
-    assert "Synced 1" in first.stdout
-    second = subprocess.run([sys.executable, script], env=env, text=True, capture_output=True, check=True)
-    assert second.stdout == ""
-
-    with sqlite3.connect(helm_db) as conn:
-        rows = conn.execute("SELECT external_message_id, content FROM telegram_inbox ORDER BY id").fetchall()
-        assert rows == [("a1", "Allowed message")]
-        status = conn.execute("SELECT value FROM app_settings WHERE key='telegram_last_sync_status'").fetchone()[0]
-        assert status == "ok"
 
 
 # ── M15a — Persistent project run summaries ──────────────────────────────

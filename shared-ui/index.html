@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Helm — Command Center</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app">
+
+  <!-- ============================================================
+       ĽAVÝ PANEL — Projekty
+       ============================================================ -->
+  <aside class="panel left">
+
+    <!-- Logo + názov -->
+    <div class="brand">
+      <div class="logo" style="background:none; box-shadow:none; overflow:hidden; padding:2px;"><img src="assets/helm-logo.png" alt="Helm logo" style="width:100%; height:100%; object-fit:contain;"></div>
+      <div>
+        <h1>HELM</h1>
+        <p>lokálny osobný AI agent</p>
+      </div>
+    </div>
+
+    <div class="modes rpg-mode-strip" aria-label="Workspace mode">
+      <button class="mode">LEARN</button>
+      <button class="mode">WORK</button>
+      <button class="mode active">SIDE</button>
+    </div>
+
+    <!-- Zoznam projektov -->
+    <div data-project-list>
+      <div class="section-title-row"><div class="section-title">Projekty</div><button class="mini-action" data-new-project type="button">+ folder</button></div>
+
+      <!-- Pridaj/odober .project bloky podľa potreby -->
+      <!-- .active = vybraný projekt -->
+
+      <div class="project active">
+        <div class="name">Helm</div>
+        <div class="meta"><span>Sideprojekt</span><span>Main</span></div>
+      </div>
+    </div>
+
+    <div class="folder-card" data-folder-card>
+      <div class="section-title-row"><div class="section-title">Open folder</div><button class="mini-action" data-open-vscode type="button">⇧ VS Code</button><button class="mini-action" data-rescan-map type="button">rescan</button></div>
+      <div class="folder-path" data-folder-path>~/bob-workspace</div>
+      <div class="folder-tree" data-folder-tree>
+        <div class="folder-tree-empty">Načítavam workspace…</div>
+      </div>
+    </div>
+
+    <!-- História chatov (dole v paneli) -->
+    <div class="history">
+      <div class="section-title-row"><div class="section-title">Chaty v projekte</div><button class="mini-action" data-new-chat type="button">+ chat</button></div>
+
+      <div data-chat-list>
+      <!-- bodka: default farba je --green, prepiš style="background:#farba" -->
+      <div class="chat-row active">
+        <span class="dot"></span>
+        Main
+      </div>
+      </div>
+    </div>
+
+  </aside>
+
+
+  <!-- ============================================================
+       STREDNÝ PANEL — Hlavný workspace
+       ============================================================ -->
+  <main class="panel main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+
+      <!-- Názov projektu + cesta -->
+      <div class="topbar-project">
+        <b data-active-project-name>Helm</b>
+        <div data-active-project-path style="font-size:12px; color:var(--muted); margin-top:3px">
+          Aktívny workspace · ~/helm-workspace
+        </div>
+      </div>
+
+      <div class="workspace-tabs" role="tablist" aria-label="Workspace layout">
+        <button class="workspace-tab" data-workspace-tab="quest" type="button">QUEST</button>
+        <button class="workspace-tab" data-workspace-tab="map" type="button">MAP</button>
+        <button class="workspace-tab active" data-workspace-tab="chat" type="button">CHAT</button>
+      </div>
+
+      <button class="mobile-menu-btn" data-mobile-console-toggle type="button" aria-label="Toggle Agent Console">☰</button>
+      <button class="settings-gear" data-settings-open type="button" aria-label="Settings">⚙</button>
+
+    </div>
+
+    <!-- Stredná sekcia — dynamický plain-text chat -->
+    <section class="stage">
+      <div class="stage-view" data-view="quest">
+        <div class="quest-shell" data-project-workspace>
+          <section class="quest-progress-card" aria-label="Quest progress">
+            <div class="quest-progress-top">
+              <strong>LV <span data-quest-level>17</span></strong>
+              <span><span data-quest-xp-current>420</span> / <span data-quest-xp-total>1000</span> XP</span>
+            </div>
+            <div class="quest-xp-bar" aria-hidden="true"><span data-quest-xp-bar style="width:42%"></span></div>
+          </section>
+
+          <section class="quest-reward-grid" aria-label="Quest rewards">
+            <button class="quest-reward-card" type="button"><strong>+25</strong><span>small</span></button>
+            <button class="quest-reward-card" type="button"><strong>+80</strong><span>main</span></button>
+            <button class="quest-reward-card" type="button"><strong>+150</strong><span>boss</span></button>
+          </section>
+
+          <section class="quest-board" aria-label="Quest list">
+            <div class="quest-list" data-project-tasks>
+              <div class="quest-row main"><span class="quest-check"></span><span class="quest-title">Helm UI mockup</span><span class="quest-xp">+80</span></div>
+              <div class="quest-row small"><span class="quest-check"></span><span class="quest-title">School mini quest</span><span class="quest-xp">+25</span></div>
+              <div class="quest-row boss"><span class="quest-check"></span><span class="quest-title">Boss task</span><span class="quest-xp">+150</span></div>
+              <div class="quest-row done"><span class="quest-check filled"></span><span class="quest-title">Clean shell</span><span class="quest-xp">done</span></div>
+            </div>
+          </section>
+
+          <div class="quest-hidden-workspace" aria-hidden="true">
+            <textarea data-project-context></textarea>
+            <div data-project-goals></div>
+            <div data-project-files></div>
+            <div data-project-notes></div>
+            <div data-project-run-history></div>
+            <div data-project-run-summaries></div>
+            <div data-project-stage-defaults></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-view" data-view="map">
+        <div class="map-preview" data-map-preview>
+          <div class="map-title">MIND MAP · preview</div>
+          <button class="map-expand" data-map-expand type="button" title="Full map bude ďalší krok">⛶</button>
+          <div class="map-line" style="left:48%; top:48%; width:190px; transform:rotate(-24deg)"></div>
+          <div class="map-line" style="left:48%; top:50%; width:170px; transform:rotate(28deg)"></div>
+          <div class="map-line" style="left:48%; top:50%; width:160px; transform:rotate(150deg)"></div>
+          <div class="map-line" style="left:48%; top:50%; width:145px; transform:rotate(205deg)"></div>
+          <div class="map-node core" style="left:50%; top:50%">HELM</div>
+          <div class="map-node" style="left:70%; top:34%">app/main.py</div>
+          <div class="map-node" style="left:72%; top:66%">settings API</div>
+          <div class="map-node" style="left:28%; top:38%">index.html</div>
+          <div class="map-node" style="left:31%; top:66%">Agent Console</div>
+          <div class="map-note">Zatiaľ preview layoutu. Funkčná codebase mapa, skenovanie a fullscreen explorer prídu v ďalšom kroku.</div>
+        </div>
+      </div>
+
+      <div class="stage-view active" data-view="chat">
+        <div class="chat-head"><strong>CHAT</strong><span>BOB ONLINE</span></div>
+        <div class="chat-thread" data-chat-thread>
+          <div class="msg user"><div class="role">YOU</div>Let's add the chat view to the workspace.</div>
+          <div class="msg assistant"><div class="role">BOB</div>Quest, Map, and Chat are now the three workspace views.</div>
+          <div class="msg user"><div class="role">YOU</div>Explain how the planner works.</div>
+          <div class="msg assistant"><div class="role">BOB</div>The planner coordinates tasks and priorities. I can turn a requested change into a reviewable run.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input bar dole -->
+    <div class="composer">
+      <div class="input-bar">
+        <button class="btn-plus">+</button>
+        <textarea class="placeholder" data-prompt-input placeholder="Ask about this project..." autocomplete="off" rows="1"></textarea>
+        <span class="context-inline" data-context-inline title="Context usage">
+          <span data-context-label>Context 0%</span>
+          <span class="meter"><span data-context-meter style="width:0%"></span></span>
+        </span>
+        <button class="tier-badge" data-tier-badge title="Context tier — klikni pre manuálne prepnutie">M</button>
+        <button class="btn-send" data-send-run>SEND</button>
+      </div>
+    </div>
+
+  </main>
+
+
+  <!-- ============================================================
+       PRAVÝ PANEL — Agent Console
+       ============================================================ -->
+  <div class="console-resizer" data-resize-agent-console role="separator" tabindex="0" aria-orientation="vertical" aria-label="Zmeniť šírku Agent Console" aria-valuemin="0" aria-valuemax="620" aria-valuenow="430" title="Ťahaj alebo použi šípky pre zmenu šírky Agent Console"></div>
+  <aside class="panel right" data-agent-console>
+
+    <!-- Hlavička -->
+    <div class="console-head">
+      <div class="console-title">
+        <h3><span class="status-dot idle" data-console-status-dot></span>AGENT CONSOLE</h3>
+        <div class="console-subline" data-console-subline>Idle · SOLO · 0 actions</div>
+        <div class="mini-status-strip" data-agent-status-strip><span class="mini-status-chip" data-status-telegram>TG sync —</span><span class="mini-status-chip" data-status-memory>MEM local</span><span class="mini-status-chip" data-status-team>TEAM idle</span></div>
+      </div>
+      <div class="console-mode-toggle" role="tablist" aria-label="Agent Console mode">
+        <button data-console-mode="basic" class="is-active" type="button" aria-selected="true">Basic</button>
+        <button data-console-mode="expert" type="button" aria-selected="false">Expert</button>
+      </div>
+      <button class="mini-action collapse-toggle" data-toggle-agent-console type="button" aria-expanded="true">›</button>
+    </div>
+
+    <div class="console-body">
+      <div class="console-section toolbox" data-toolbox>
+        <div class="console-section-title"><span data-activity-title>Tools</span><span data-tool-count>0</span></div>
+        <div class="activity-tabs" role="tablist" aria-label="Console activity filter">
+          <button class="is-active" data-console-activity-tab="tools" type="button" role="tab" aria-selected="true">Tools <span data-tools-tab-count>0</span></button>
+          <button data-console-activity-tab="actions" type="button" role="tab" aria-selected="false">Actions <span data-actions-tab-count>0</span></button>
+          <button data-console-activity-tab="terminal" type="button" role="tab" aria-selected="false">Terminal <span data-terminal-tab-count>0</span></button>
+          <button data-console-activity-tab="thinking" type="button" role="tab" aria-selected="false">Thinking <span data-thinking-tab-count>0</span></button>
+          <button data-console-activity-tab="diff" data-console-expert-only type="button" role="tab" aria-selected="false">Diff <span data-diff-tab-count>0</span></button>
+          <button class="activity-close" data-close-activity-detail type="button" title="Zavrieť otvorené detaily">close</button>
+        </div>
+        <pre class="terminal-output" data-terminal-output hidden>Žiadny runtime výstup.</pre>
+        <div class="activity-feed" data-activity-feed>
+          <button class="activity-row" type="button">
+            <span class="activity-icon">·</span>
+            <span class="activity-name">idle</span>
+            <span class="activity-target">no active events</span>
+            <span class="activity-count">—</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="console-section progress-panel" data-progress-panel>
+        <div class="console-section-title"><span>Progress</span><span data-progress-badge>idle</span></div>
+        <div class="stage-progress" data-stage-progress></div>
+        <pre class="progress-box" data-progress-box>Zatiaľ žiadny bežiaci run.</pre>
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+
+<div class="modal-overlay" data-project-modal aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="project-modal-title">
+    <header>
+      <h2 id="project-modal-title">Nový projekt</h2>
+      <button class="modal-close" data-project-modal-close type="button" aria-label="Zavrieť">×</button>
+    </header>
+    <div class="modal-body" data-project-modal-body>
+      <div class="project-modal-choices">
+        <button class="btn-primary" data-project-choice-new type="button">+ Vytvoriť nový projekt</button>
+        <button class="btn-secondary" data-project-choice-open type="button">⇧ Otvoriť existujúci adresár</button>
+      </div>
+      <div class="project-browser" data-project-browser hidden>
+        <div class="browser-nav">
+          <button class="mini-action" data-browser-up type="button">↑ Hore</button>
+          <span class="browser-path" data-browser-path></span>
+        </div>
+        <div class="browser-list" data-browser-list></div>
+        <div class="browser-form">
+          <label for="browser-project-name">Názov projektu (voliteľné)</label>
+          <input id="browser-project-name" type="text" data-browser-project-name placeholder="Použije sa názov adresára" />
+          <button class="btn-primary" data-browser-open type="button">Otvoriť tento adresár</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="settings-overlay" data-settings-overlay aria-hidden="true">
+  <div class="settings-card" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <header>
+      <h2 id="settings-title">Settings</h2>
+      <button class="settings-close" data-settings-close type="button" aria-label="Close settings">×</button>
+    </header>
+    <div class="settings-field">
+      <label for="theme-select">Appearance theme</label>
+      <select id="theme-select" class="theme-select" data-theme-select aria-label="Appearance theme">
+        <option value="helm-default">Helm Default</option>
+        <option value="helm-rpg">Helm RPG</option>
+      </select>
+      <p>Layout je spoločný RPG shell. Theme teraz mení iba farby a feeling prvkov.</p>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local runtime/data
+.env
+.env.*
+!.env.example
+data/
+.local/
+*.db
+*.sqlite
+*.sqlite3
+
+# Helm generated backups/snapshots
+snapshots/
+
+# Generated analysis/cache exports
+.understand-anything/
+
+# Runtime artifacts and logs
+runs/
+*.log
+*.tmp
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node/browser scratch if added later
+node_modules/
+dist/
+build/
